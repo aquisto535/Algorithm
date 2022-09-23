@@ -2,10 +2,6 @@
 
 int finder(int lower, int middle, int upper, int*arr, int key) {
 
-	
-
-	
-
 	for ( int i = 0; i < upper; i++)
 	{
 		if (arr[i] == key)
@@ -20,16 +16,11 @@ int finder(int lower, int middle, int upper, int*arr, int key) {
 		}
 		else
 		{
-			upper = middle - 1;
+			upper = middle - 1; 
 		} 
-
-		
-
 
 	}
 	return 0;
-
-
 }
 
 
