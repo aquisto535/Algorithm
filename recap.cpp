@@ -1,55 +1,29 @@
 #include <stdio.h>
 
-// 재귀함수(배열의 위치를 인자로 넣는다 = first, last, targer) 
-// => 배열의 위치를 통해 원하는 값을 얻어냄
-// => 이 때 조건의 실행 함수를 재귀함수로 넣는다.
-//int halfsearch(int ar[], int first, int last, int target)
+
+
+// 하노이 타워
+
+//void HanoiTowerMove(int num, char from, char by, char to)
 //{
-//	int mid = (first + last) / 2;
-//
-//	if (first > last)
-//		return -1;
-// 
-// 	if (ar[mid] == target)
-//		return mid;
-//	else if (target < ar[mid])
-//		halfsearch(ar, first, mid - 1, target);
+//	if (num == 1)
+//	{
+//		printf("원반 1을 %c에서 %c로 이동\n", from, to);
+//	}
 //	else 
-//		halfsearch(ar, mid + 1, last, target);
-//}
+//	{
+//		HanoiTowerMove(num - 1, from, to, by);
+//		printf("원반 %d를 %c에서 %c로 이동\n", num, from, to);
+//		HanoiTowerMove(num - 1, by, from, to );
+//	}
 //
+//}
 //
 //int main()
 //{
-//	int arr[] = {1,3,5,7,9}; 
+//	
+//	//막대A의 원반 n개를 막대B를 경유하여 막대 C로 옮기기
+//	HanoiTowerMove(3, 'A', 'B', 'C');
 //
-//	halfsearch(arr, 0, sizeof(arr)/sizeof(int) - 1, 1);
 //
-//
-//	return 0;
 //}
-
-int halfsearch(int ar[], int first, int last, int target)
-{
-	int mid = (first + last) / 2;
-
-
-	if (first > last)
-		return -1;
-
-
-	if (target = mid)
-		return 1;
-	else if(target < mid)
-
-}
-
-
-
-int main()
-{
-	int arr[] = { 1,3,5,7,9 };
-
-
-
-}

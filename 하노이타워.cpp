@@ -1,36 +1,25 @@
 #include <stdio.h>
 
-int Bsearch(int ar[], int first, int last, int target)
+void HanoiTowerMove(int num, char from, char by, char to )
 {
-	int mid = (first + last) / 2;
-
-	if (first > last)
-		return -1;
-
-	if (ar[mid] == target)
-		return mid;
-	else if (ar[mid] > target)
-		return Bsearch(ar,  first, mid - 1, target);
+	if (num == 1)
+	{
+		printf("원반 1을 %c에서 %c로 이동\n", from, to);
+	}
 	else
-		return Bsearch(ar, mid + 1, last, target);
-
+	{
+		HanoiTowerMove(num - 1, from, to, by);
+		printf("원반 %d를 %c에서 %c로 이동\n", num, from, to);
+		HanoiTowerMove(num -1, by, from, to);
+	}
 
 }
 
-
 int main()
 {
-	int arr[] = { 1,3,5,7,9 };
+	//막대A의 원반 3개를 막대B를 경유하여 막대 C로 옮기기
 
-	int idx = Bsearch(arr, 0, sizeof(arr) / sizeof(int) - 1, 3);
+	HanoiTowerMove(3, 'A', 'B', 'C');
 
-	if (idx == - 1)
-	{
-		printf("탐색 실패\n");
-	}
-	else
-	{
-		printf("타겟 저장 인덱스: %d \n", idx);
-	}
-
+	return 0;
 }
