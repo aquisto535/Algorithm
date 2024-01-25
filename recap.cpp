@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+
 typedef struct USERDATA
 {
 	int age;
@@ -11,77 +12,216 @@ typedef struct USERDATA
 
 }USERDATA;
 
-USERDATA* g_pHeadNode = NULL;
+USERDATA pHead = { 0, "_DummyHead_" };
 
-void AddNewNode(int age, const char *	pszName, const char * pszPhone) //변화를 주지 않는 변수라면 const를 써주는 것이 좋다!
+
+void addNode(int age, const char* name, const char* phone)
 {
-	USERDATA* pNewNode = (USERDATA*)malloc(sizeof(USERDATA));
-	pNewNode->age = age;
-	strcpy_s(pNewNode->name, sizeof(pNewNode->name), pszName );
-	strcpy_s(pNewNode->phone, sizeof(pNewNode->phone), pszPhone);
-	pNewNode->pNext = NULL; 
+	USERDATA* User = (USERDATA*)calloc(1, sizeof(USERDATA)); // 기본적으로 주소 값 변수임. *연산자가 붙은 변수는 무조건 주소값을 받는다!!!
+	User->age = age;
+	strcpy_s(User->name, name);
+	strcpy_s(User->phone, phone);
+	User->pNext = NULL;
 
-	if (g_pHeadNode == NULL)
-	{
-		g_pHeadNode = pNewNode;	 
-	}
-	else
-	{
-		pNewNode->pNext = g_pHeadNode; //null 값 대입
-		g_pHeadNode = pNewNode;
+	USERDATA* pTmp = &pHead;
+	while (pTmp->pNext != NULL)
+		pTmp = pTmp->pNext;
+
+	pTmp->pNext = User;
+
 	
+
+
+	
+}
+
+USERDATA* FindNode(const char* name)
+{
+	USERDATA* pTmp = &pHead;
+	while (pTmp != NULL)
+	{
+		if (strcmp(name, pTmp->name) == 0)
+		{
+			printf("나이 : %d, 이름 : %s, 연락처 : %s, 메모리 주소 %p\n", pTmp->age, pTmp->name, pTmp->phone, pTmp->pNext);
+			return pTmp;
+		}
+			
+		
+		pTmp = pTmp->pNext;
 	}
+
+	return NULL;
+}
+
+USERDATA* SearchToName(USERDATA* pPrev, const char* name)
+{
+	USERDATA* pCurrent = pHead.pNext;
+	USERDATA* pPrev = NULL;
+
+	while (pCurrent != NULL)
+	{
+		if (strcmp(name, pCurrent->name) == 0)
+		{
+			//printf("나이 : %d, 이름 : %s, 연락처 : %s, 메모리 주소 %p\n", pCurrent->age, pCurrent->name, pCurrent->phone, pCurrent->pNext);
+			return pCurrent;
+			
+		}
+
+		pPrev = pCurrent; //현재 노드 값 백업 
+		pCurrent = pCurrent->pNext;
+	}
+
+	printf("\"%s\" Not Found", name);
+	return NULL;
+}
+
+void RemoveNode(USERDATA* pPrev)
+{
+	USERDATA* pRemove = NULL;
+	if (pPrev == NULL) //헤드노드가 가리키는 노드를 지우는 경우
+	{
+		if (pHead == NULL) // 노드가 아예 없는 경우
+			return; 
+		else //첫번째 노드 삭제
+		{
+			pRemove = pHead;
+			pHead = pRemove->pNext;
+			printf("RemoveNode(): %s\n", pRemove->name);
+			free(pRemove);
+		}
+
+		return;
+
+	}
+	
+	pRemove = pPrev->pNext; // 현재 노드
+	pPrev->pNext = pRemove->pNext; //현재 노드가 가리키는 다음 노드
+	free(pRemove);
+
 
 
 }
 
-void  ReleaseList()
+
+
+void printList()
 {
-	USERDATA* pTmp = g_pHeadNode;
-	USERDATA* pDelete;
+	USERDATA* pTmp = pHead; //c++ begin, end 역할
+	while (pTmp != NULL)
+	{
+		printf("나이 : %d, 이름 : %s, 연락처 : %s, 메모리 주소 %p\n", pTmp->age, pTmp->name, pTmp->phone, pTmp->pNext);
+
+		pTmp = pTmp->pNext;
+	}
+	putchar('\n');
+
+}
+
+
+
+void releaseNode()
+{
+	USERDATA* pTmp = pHead;
+	USERDATA* pDelete = NULL;
 
 	while (pTmp != NULL)
 	{
-		//pTmp = pTmp->pNext; //
-		//USERDATA*  pSave = pTmp->pNext;
-		//free(pTmp); 
-		//pTmp = pSave;
-
 		pDelete = pTmp;
 		pTmp = pTmp->pNext;
-
-		printf("[%p], %d,%s,%s, [%p]\n", pDelete, pDelete->age, pDelete->name, pDelete->phone, pDelete->pNext); // 테스트 코드
-
 		free(pDelete);
 
+		//printf("나이 : %d, 이름 : %s, 연락처 : %s, 메모리 주소 %p\n", pTmp->age, pTmp->phone, pTmp->phone, pTmp->pNext);
+
 	}
 
-	g_pHeadNode = NULL;
+	pHead = NULL;
 
 }
 
-void PrintList() //기능 하나당 하나의 함수를 만들어 놓으면 전체 흐름을 파악해두기 좋다!
+void TestStep01()
 {
-	//Print list
-	USERDATA* pTmp = g_pHeadNode;
+	puts("TestStep01()---------------------");
+	addNode(11, "abc123", "010-3333-3333");
+	addNode(11, "bbc123", "010-4444-4444");
+	addNode(21, "tmjung", "010-2222-2222");
+	printList();
 
-	while (pTmp != NULL)
-	{
-		printf("[%p], %d,%s,%s, [%p]\n", pTmp, pTmp->age, pTmp->name, pTmp->phone, pTmp->pNext);
-		pTmp = pTmp->pNext;
-	}
+	USERDATA* pPrev = NULL;
+	if (SearchToName(&pPrev, "abc123") != NULL) // 포인터 변수의 값을 변하게 하려면 이중포인터 변수를 통해야만 한다!!
+		RemoveNode(pPrev);
 
+	releaseNode();
+	putchar('\n');
 }
 
-int main() 
+void TestStep02()
 {
-	//Input
-	AddNewNode(10, "tmjung", "010-2826-0961");
-	AddNewNode(10, "test1", "010-1111-1111");
-	AddNewNode(10, "test2", "010-2222-2222");
+	puts("TestStep02()---------------------");
+	addNode(11, "abc123", "010-3333-3333");
+	addNode(11, "bbc123", "010-4444-4444");
+	addNode(21, "tmjung", "010-2222-2222");
+	printList();
 
-	PrintList();
+	USERDATA* pPrev = NULL;
+	if (SearchToName(&pPrev, "bbc123") != NULL) // 포인터 변수의 값을 변하게 하려면 이중포인터 변수를 통해야만 한다!!
+		RemoveNode(pPrev);
 
-	ReleaseList();
+	releaseNode();
+	putchar('\n');
+}
+
+
+void TestStep03()
+{
+	puts("TestStep03()---------------------");
+	addNode(11, "abc123", "010-3333-3333");
+	addNode(11, "bbc123", "010-4444-4444");
+	addNode(21, "tmjung", "010-2222-2222");
+	printList();
+
+	USERDATA* pPrev = NULL;
+	if (SearchToName(&pPrev, "tmjung") != NULL) // 포인터 변수의 값을 변하게 하려면 이중포인터 변수를 통해야만 한다!!
+		RemoveNode(pPrev);
+
+	releaseNode();
+	putchar('\n');
+}
+
+
+
+
+int main()
+{
+	
+
+	
+
+
+
+	addNode(21, "tmjung", "010-2222-2222");
+
+	printList();
+
+	addNode(11, "abc123", "010-3333-3333");
+	addNode(11, "bbc123", "010-4444-4444");
+
+	if (SearchToName(&pPrev, "tmjung") != NULL) // 포인터 변수의 값을 변하게 하려면 이중포인터 변수를 통해야만 한다!!
+		RemoveNode(pPrev);
+	addNode(11, "ccc123", "010-5555-5555");
+
+	printList();
+
+	//FindNode("wjdxoals");
+	//FindNode("tmjung");
+	//FindNode("abc123");
+	//FindNode("bbc123");
+	//FindNode("ccc123");
+	//FindNode("KIM"); //없는 데이터도 테스트 필요
+
+	releaseNode();
+
 	return 0;
 }
+
+
+
