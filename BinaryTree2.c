@@ -96,12 +96,12 @@ void DeleteTree(BTreeNode* node)
     {
         if (node->left != NULL)
         {
-            DeleteSubTree(node->left);
+            DeleteTree(node->left);
         }
 
         if (node->right != NULL)
         {
-            DeleteSubTree(node->right);
+            DeleteTree(node->right);
         }
 
         //DeleteSubTree(node);
