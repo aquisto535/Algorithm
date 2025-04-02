@@ -74,10 +74,46 @@ void InorderTraverse(BTreeNode* bt, VisitFuncPtr action) //중위 순회
 
 void PostorderTraverse(BTreeNode* bt, VisitFuncPtr action) //후위 순회
 {
-    if(bt == NULL)
+    //if(bt == NULL)
+    //    return;
+
+    if (bt == NULL)
         return;
 
     PostorderTraverse(bt->left, action);
     PostorderTraverse(bt->right, action);
     action(bt->data);
+}
+
+void DeleteTree(BTreeNode* node)
+{
+    if (node == NULL)
+        return;
+
+    printf("Enter Node Number: %d\n", node->data);
+
+    if (node->left != NULL || node->right != NULL)
+    {
+        if (node->left != NULL)
+        {
+            DeleteSubTree(node->left);
+        }
+
+        if (node->right != NULL)
+        {
+            DeleteSubTree(node->right);
+        }
+
+        //DeleteSubTree(node);
+        printf("free Node Number: %d\n", node->data);
+        free(node);
+        
+    }
+    else
+    {
+        printf("free Node Number: %d\n", node->data);
+        free(node);
+        return;
+    }
+
 }
